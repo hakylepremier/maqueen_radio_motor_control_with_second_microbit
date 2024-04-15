@@ -1,4 +1,5 @@
 from microbit import *
+import radio
 
 accel_y = 0
 accel_x = 0
@@ -7,6 +8,11 @@ accel_x_offset = 400
 # This changes the sensitivity in the y direction (forward, backward)
 accel_y_offset = 400
 direction = "F"
+
+# Initialise radio
+radio.on()
+radio.config(channel=13, group=7)
+
 display.show(Image.HAPPY)
 
 while True:
@@ -23,5 +29,9 @@ while True:
         direction = "B"
     if accel_x < accel_x_offset and accel_x > accel_x_offset * -1 and (accel_y < accel_y_offset and accel_y > accel_y_offset * -1):
         direction = "-"
+
     display.show(direction)
-    sleep(50)
+    if direction == "-":
+        direction = "S"
+
+    radio.send(direction)
